@@ -72,16 +72,16 @@ class WebSecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
                 // Public endpoints (including Swagger)
-                auth.requestMatchers("/api/auth/**").permitAll()
-                auth.requestMatchers("/api/public/**").permitAll()
+                auth.requestMatchers("/api/v1/auth/**").permitAll()
+                auth.requestMatchers("/api/v1/public/**").permitAll()
                 auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 auth.requestMatchers("/h2-console/**").permitAll()
                 auth.requestMatchers("/actuator/**").permitAll()
 
                 // Role-based access
-                auth.requestMatchers("/api/admin/**").hasRole("ADMIN")
-                auth.requestMatchers("/api/manager/**").hasAnyRole("ADMIN", "MANAGER")
-                auth.requestMatchers("/api/user/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                auth.requestMatchers("/api/v1/manager/**").hasAnyRole("ADMIN", "MANAGER")
+                auth.requestMatchers("/api/v1/user/**").hasAnyRole("ADMIN", "MANAGER", "USER")
 
 //                // HTTP method restrictions
 //                auth.requestMatchers(HttpMethod.GET, "/api/resources/**").hasAnyRole("USER", "MANAGER", "ADMIN")

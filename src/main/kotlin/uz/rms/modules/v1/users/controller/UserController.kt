@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -18,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import uz.rms.common.MessageResponse
+import uz.rms.modules.v1.user.dto.UserDto
 import uz.rms.modules.v1.users.domain.User
 import uz.rms.modules.v1.users.services.UserService
 
-
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "User Management", description = "User management and profile APIs")
 @RestController
 @RequestMapping("/api/v1/users")
@@ -37,7 +39,7 @@ class UserController(
     )
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    fun getAllUsers(): ResponseEntity<List<User>> {
+    fun getAllUsers(): ResponseEntity<List<UserDto>> {
         return ResponseEntity.ok(userService.findAllUsers())
     }
 

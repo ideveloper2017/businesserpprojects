@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uz.rms.modules.v1.user.dto.UserDto
 import uz.rms.modules.v1.users.domain.User
 import uz.rms.modules.v1.users.repository.RoleRepository
 import uz.rms.modules.v1.users.repository.UserRepository
@@ -19,8 +20,8 @@ class UserService(
 ) {
 
     // Remove @PreAuthorize - authorization will be handled at controller level
-    fun findAllUsers(): List<User> {
-        return userRepository.findAll()
+    fun findAllUsers(): List<UserDto> {
+        return userRepository.findAll().map { UserDto.fromUser(it) as UserDto }
     }
 
     fun findUserById(id: Long): User? {
