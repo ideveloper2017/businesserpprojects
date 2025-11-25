@@ -7,18 +7,24 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
-import uz.rms.modules.v1.users.domain.User
+
 
 import java.util.*
 import javax.crypto.SecretKey
 
 @Component
 class JwtUtils(
-    @Value("\${rms.app.jwtSecret}")
+    @Value("\${app.jwt.secret}")
     val jwtSecret: String,
 
-    @Value("\${rms.app.jwtExpirationMs:86400000}")
+    @Value("\${app.jwt.expiration}")
+    private val accessTokenExpirationInMs: Long,
+    @Value("\${app.jwt.refresh-expiration:2592000000}") // 30 days default
+    private val refreshTokenExpirationInMs: Long,
+
+    @Value("\${app.jwt.expiration:86400000}")
     private val jwtExpirationMs: Int
 ) {
     private val logger = LoggerFactory.getLogger(JwtUtils::class.java)
@@ -57,7 +63,7 @@ class JwtUtils(
     fun getAuthoritiesFromToken(token: String): Collection<GrantedAuthority> {
         val claims = getClaimsFromToken(token)
         val roles = claims.get("roles") as? List<*> ?: return emptyList()
-        
+
         return roles.mapNotNull { role ->
             role?.let { SimpleGrantedAuthority(it.toString()) }
         }
@@ -65,34 +71,35 @@ class JwtUtils(
 
     fun generateJwtToken(authentication: Authentication): String {
         val principal = authentication.principal
-        
-        return when (principal) {
-            is UserDetailsImpl -> {
-                Jwts.builder()
-                    .subject(principal.username)
-//                    .claim("tenantId", principal.tenant?)
-                    .claim("roles", principal.authorities?.map { it?.authority })
-                    .issuedAt(Date())
-                    .expiration(Date(System.currentTimeMillis() + jwtExpirationMs))
-                    .signWith(key, Jwts.SIG.HS512)
-                    .compact()
-            }
-            is User -> {
-                val authorities = principal.roles.flatMap { role ->
-                    listOf("ROLE_${role.name}") + role.permissions.map { it.name }
-                }
-                
-                Jwts.builder()
-                    .subject(principal.login)
-                    .claim("tenantId", principal.tenant?.id)
-                    .claim("roles", authorities)
-                    .issuedAt(Date())
-                    .expiration(Date(System.currentTimeMillis() + jwtExpirationMs))
-                    .signWith(key, Jwts.SIG.HS512)
-                    .compact()
-            }
+        val (username, authorities) = when (principal) {
+            is UserDetailsImpl -> principal.username to (principal.authorities?.map { it?.authority } ?: emptyList<String>())
+            is UserDetails -> principal.username to principal.authorities.map { it.authority }
             else -> throw IllegalStateException("Unexpected principal type: ${principal.javaClass.name}")
         }
+
+        return Jwts.builder()
+            .subject(username)
+            .claim("roles", authorities)
+            .issuedAt(Date())
+            .expiration(Date(System.currentTimeMillis() + jwtExpirationMs))
+            .signWith(key, Jwts.SIG.HS512)
+            .compact()
+    }
+
+
+    fun generateRefreshToken(userDetails: UserDetails): String {
+        val now = Date()
+        val expiryDate = Date(now.time + refreshTokenExpirationInMs)
+        val userDetailsImpl = userDetails as? UserDetailsImpl
+
+        return Jwts.builder()
+            .setSubject(userDetails.username)
+            .claim("id", userDetailsImpl?.getId())
+            .claim("type", "refresh")
+            .setIssuedAt(now)
+            .setExpiration(expiryDate)
+            .signWith(key, SignatureAlgorithm.HS512)
+            .compact()
     }
 
     fun generateTokenFromUsername(username: String): String {
@@ -109,4 +116,21 @@ class JwtUtils(
             .parseSignedClaims(token)
             .payload
     }
+
+    fun getExpirationInSeconds(token: String): Long {
+        return try {
+            val claims = Jwts.parser()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .body
+
+            (claims.expiration.time - Date().time) / 1000
+        } catch (e: Exception) {
+            0L
+        }
+    }
+
+
+
 }

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.validation.Valid
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import uz.rms.security.JwtUtils
 import uz.rms.common.MessageResponse
 import uz.rms.modules.v1.audit.services.AuditService
 import uz.rms.modules.v1.auth.dto.AuthResponse
@@ -30,7 +32,6 @@ import uz.rms.modules.v1.users.dto.PermissionDto
 import uz.rms.modules.v1.users.dto.RoleDto
 import uz.rms.modules.v1.users.dto.UserInfo
 import uz.rms.modules.v1.users.repository.UserRepository
-import uz.rms.security.JwtUtils
 
 
 @Tag(name = "Authentication", description = "Authentication and user management APIs")
@@ -57,45 +58,56 @@ class AuthenticationController(
     )
     @PostMapping("/signin")
     fun authenticateUser(@Valid @RequestBody loginRequest: LoginRequest, request: HttpServletRequest): ResponseEntity<AuthResponse> {
-        try {
-            val authentication: Authentication = authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(
-                    loginRequest.username,
-                    loginRequest.password
+
+            try {
+                val authentication: Authentication = authenticationManager.authenticate(
+                    UsernamePasswordAuthenticationToken(
+                        loginRequest.username,
+                        loginRequest.password
+                    )
                 )
-            )
 
-            SecurityContextHolder.getContext().authentication = authentication
-            val jwt = jwtUtils.generateJwtToken(authentication)
+                SecurityContextHolder.getContext().authentication = authentication
+                val jwt = jwtUtils.generateJwtToken(authentication)
 
-            val userDetails = authentication.principal as UserDetails
-            val user = userRepository.findByLogin(userDetails.username).orElse(null)
+                val userDetails = authentication.principal as UserDetails
+                val user = userRepository.findByLogin(userDetails.username).orElse(null)
 
-            // Log successful login
+                // Log successful login
 
-            auditService.logSuccessfulLogin(user?.id, userDetails.username, request)
-            //       roles = userDetails.authorities.map { it.authority }.filter { it.startsWith("ROLE_") },
-            //       permissions = userDetails.authorities.map { it.authority }.filter { !it.startsWith("ROLE_") }
+                auditService.logSuccessfulLogin(user?.id, userDetails.username, request)
+                //       roles = userDetails.authorities.map { it.authority }.filter { it.startsWith("ROLE_") },
+                //       permissions = userDetails.authorities.map { it.authority }.filter { !it.startsWith("ROLE_") }
 
-            return ResponseEntity.ok(
-                AuthResponse(
-                    token = jwt,
-                    type = "Bearer",
-                    id = user?.id,
-                    username = userDetails.username,
-                    email = user?.email ?: "",
-                    roles = user.roles.map { RoleDto(it.id, it.name, it.description) },
-                    permissions = user.permissions.map {
-                        PermissionDto(it.id, it.name, it.description, it.resource, it.action)
-                    }
+//            AuthResponse(
+//                token = jwt,
+//                type = "Bearer",
+//                id = user?.id,
+//                username = userDetails.username,
+//                email = user?.email ?: "",
+//                roles = user.roles.map { RoleDto(it.id, it.name, it.description) },
+//                permissions = user.permissions.map {
+//                    PermissionDto(it.id, it.name, it.description, it.resource, it.action)
+//                }
+//            )
+                val accessToken = jwt
+                val refreshToken = jwtUtils.generateRefreshToken(userDetails)
+
+                return ResponseEntity.ok(
+                    AuthResponse(
+                        accessToken = accessToken,
+                        refreshToken = refreshToken,
+                        expiresIn = jwtUtils.getExpirationInSeconds(accessToken),
+                    )
+
                 )
-            )
-        } catch (e: Exception) {
-            // Log failed login
-            auditService.logFailedLogin(loginRequest.username, request, e.message)
-            throw e
+            } catch (e: Exception) {
+                // Log failed login
+                auditService.logFailedLogin(loginRequest.username, request, e.message)
+                throw e
+            }
         }
-    }
+
 
     @Operation(summary = "User registration", description = "Register a new user account")
     @ApiResponses(
@@ -142,6 +154,7 @@ class AuthenticationController(
         return ResponseEntity.ok(MessageResponse("You've been signed out!"))
     }
 
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Get current user", description = "Get information about the currently authenticated user")
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "Current user information", content = [Content(schema = Schema(implementation = UserInfo::class))]),
@@ -151,19 +164,18 @@ class AuthenticationController(
     fun getCurrentUser(): ResponseEntity<UserInfo> {
         val authentication = SecurityContextHolder.getContext().authentication
         val userDetails = authentication.principal as UserDetails
-        val user = userRepository.findByLogin(userDetails.username).orElse(null)
+        val user = userRepository.findByLogin(userDetails.username)
+            .orElseThrow { RuntimeException("User not found") }
 
         return ResponseEntity.ok(
             UserInfo(
-                id = user?.id,
-                username = userDetails.username,
-                email = user?.email ?: "",
-                firstName = user?.firstName ?: "",
-                lastName = user?.lastName ?: "",
+                id = user.id,
+                username = user.username ?: "",
+                email = user.email ?: "",
+                firstName = user.firstName ?: "",
+                lastName = user.lastName ?: "",
                 roles = user.roles.map { RoleDto(it.id, it.name, it.description) },
-                permissions = user.permissions.map {
-                    PermissionDto(it.id, it.name, it.description, it.resource, it.action)
-                }
+                permissions = user.permissions.map { PermissionDto(it.id, it.name) }
             )
         )
     }

@@ -1,7 +1,9 @@
 package uz.rms.security
+import io.swagger.v3.oas.models.PathItem
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler
@@ -16,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfigurationSource
 
 @Configuration
 @EnableWebSecurity
@@ -35,7 +38,9 @@ class WebSecurityConfig(
     private val authTokenFilter: AuthTokenFilter,
 
     @Autowired
-    private val customPermissionEvaluator: CustomPermissionEvaluator
+    private val customPermissionEvaluator: CustomPermissionEvaluator,
+
+    private val corsConfigurationSource: CorsConfigurationSource
 ) {
 
     @Bean
@@ -66,11 +71,14 @@ class WebSecurityConfig(
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .cors { it.disable() }
+            .cors { cors ->
+                cors.configurationSource(corsConfigurationSource)
+            }
             .csrf { it.disable() }
             .exceptionHandling { it.authenticationEntryPoint(authEntryPointJwt) }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
+                auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 // Public endpoints (including Swagger)
                 auth.requestMatchers("/api/v1/auth/**").permitAll()
                 auth.requestMatchers("/api/v1/public/**").permitAll()
@@ -96,7 +104,7 @@ class WebSecurityConfig(
             .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
 
         // For H2 Console (development only)
-        http.headers { it.frameOptions().disable() }
+     //   http.headers { it.frameOptions().disable() }
 
         return http.build()
     }

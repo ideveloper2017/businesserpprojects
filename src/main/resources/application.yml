@@ -1,0 +1,76 @@
+server:
+  port: 8080
+#  servlet:
+#    context-path: /api
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+    enabled-encodings: gzip,deflate
+
+spring:
+  application:
+    name: BillingAqua
+  profiles:
+    active: h2
+  main:
+    allow-bean-definition-overriding: false
+
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+#    operations-sorter: method
+#    tags-sorter: alpha
+#    doc-expansion: none
+#    display-request-duration: true
+#    default-model-expand-depth: 3
+#    default-model-rendering: model
+#    display-operation-id: true
+#    persist-authorization: true
+#    filter: true
+#    try-it-out-enabled: true
+    with-credentials: true
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json
+  model-and-view-allowed: true
+  override-with-generic-response: false
+#  show-actuator: true
+#  use-management-port: false
+
+app:
+  cors:
+    allowedOrigins: http://localhost:5173,http://127.0.0.1:5173,http://localhost:4173
+  jwt:
+    secret: 3zTvzr3p67VC61kmV54rIYu1545x4r4B70aRw4p3r6a8THa2yn2g4ZgPLv04y3fI
+    expiration: 86400000 # 24 hours in milliseconds
+    refresh-expiration: 2592000000 # 30 days in milliseconds
+    clock-skew: 30000 # 30 seconds in milliseconds
+    header: Authorization
+    token-prefix: "Bearer "
+    token-type: Bearer
+
+
+  upload:
+    dir: ./uploads
+
+
+
+# File Storage Configuration
+file:
+  upload-dir: ./uploads
+  max-file-size: 10MB
+  allowed-extensions: jpg,jpeg,png,gif,pdf,doc,docx,xls,xlsx
+
+# Security Configuration
+security:
+  jwt:
+    header: Authorization
+    prefix: Bearer
+    secret: 3zTvzr3p67VC61kmV54rIYu1545x4r4B70aRw4p3r6a8THa2yn2g4ZgPLv04y3fI
+    expiration: 86400000 # 24 hours in milliseconds
+
