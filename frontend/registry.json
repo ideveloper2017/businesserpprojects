@@ -1,0 +1,12 @@
+{
+  "$schema": "https://ui.shadcn.com/registry/schema.json",
+  "dependencies": {
+    "button": "latest"
+  },
+  "registry": [
+    {
+      "name": "default",
+      "url": "https://ui.shadcn.com"
+    }
+  ]
+}
