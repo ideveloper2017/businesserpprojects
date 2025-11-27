@@ -17,6 +17,7 @@ import {
   ImageIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { TenantSelector } from "@/components/tenant/TenantSelector";
 
 interface NavItem {
   name: string;
@@ -199,6 +200,9 @@ export function Sidebar() {
       </nav>
 
       <div className="border-t p-2">
+        <div className="mb-3">
+          <TenantSelector />
+        </div>
         <NavLink
           to="/settings"
           className={({ isActive }) =>

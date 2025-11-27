@@ -19,6 +19,11 @@ export function useApi() {
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
+      // Attach tenant header from localStorage or env default
+      const tenantId = (typeof window !== 'undefined' ? localStorage.getItem('tenantId') : null) || (import.meta as any).env?.VITE_DEFAULT_TENANT_ID;
+      if (tenantId && !config.headers['X-Tenant-ID']) {
+        config.headers['X-Tenant-ID'] = tenantId;
+      }
       return config;
     },
     (error) => {

@@ -68,6 +68,13 @@ async function apiRequest<T>(
   }
 
 
+  // Attach tenant header if available
+  const tenantId = (typeof window !== 'undefined' ? localStorage.getItem('tenantId') : null) || (import.meta as any).env?.VITE_DEFAULT_TENANT_ID;
+  if (tenantId && !headers['X-Tenant-ID']) {
+    headers['X-Tenant-ID'] = tenantId;
+  }
+
+
   try {
     console.log(`[API] Sending ${method} request to ${url} with data:`, data);
     const response = await api.request<ApiResponse<T>>({

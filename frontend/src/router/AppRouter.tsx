@@ -9,6 +9,7 @@ import {UserManagement} from "@/pages/user";
 import PermissionsPage from "@/pages/user/PermissionsPage";
 import {ProductPage} from "@/pages/product";
 import {CategoryTreeTable} from "@/components/product/category";
+import { Inventory } from "@/pages/inventory";
 
 
 const AppRouter = () => {
@@ -43,6 +44,16 @@ const AppRouter = () => {
                  <AuthGuard>
                      <AdminDashboard>
                          <CategoryTreeTable />
+                     </AdminDashboard>
+                 </AuthGuard>
+             }
+         />
+         <Route
+             path="/inventory"
+             element={
+                 <AuthGuard>
+                     <AdminDashboard>
+                         <Inventory />
                      </AdminDashboard>
                  </AuthGuard>
              }
