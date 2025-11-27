@@ -8,6 +8,7 @@ import RolesPage from "@/pages/user/RolesPage";
 import {UserManagement} from "@/pages/user";
 import PermissionsPage from "@/pages/user/PermissionsPage";
 import {ProductPage} from "@/pages/product";
+import {CategoryTreeTable} from "@/components/product/category";
 
 
 const AppRouter = () => {
@@ -32,6 +33,16 @@ const AppRouter = () => {
                  <AuthGuard>
                      <AdminDashboard>
                          <ProductPage />
+                     </AdminDashboard>
+                 </AuthGuard>
+             }
+         />
+         <Route
+             path="/categories"
+             element={
+                 <AuthGuard>
+                     <AdminDashboard>
+                         <CategoryTreeTable />
                      </AdminDashboard>
                  </AuthGuard>
              }

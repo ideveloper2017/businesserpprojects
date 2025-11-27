@@ -7,8 +7,8 @@ import { ProductCategory } from '@/types/product.types';
 import { toast } from 'sonner';
 import { CategoryForm } from './CategoryForm';
 import { Badge } from '@/components/ui/badge';
-import {confirmDialog, ConfirmDialog} from 'primereact/confirmdialog';
-import 'primereact/resources/themes/lara-light-indigo/theme.css';
+//import {confirmDialog, ConfirmDialog} from 'primereact/confirmdialog';
+// import 'primereact/resources/themes/lara-light-indigo/theme.css';
 
 interface TreeNode extends ProductCategory {
   key: string;
@@ -117,14 +117,14 @@ export const CategoryTreeTable = () => {
   };
 
   const confirmDelete = (category: ProductCategory) => {
-    confirmDialog({
-      message: `"${category.name}" kategoriyasini o'chirishni tasdiqlaysizmi?`,
-      header: 'Tasdiqlash',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Ha',
-      rejectLabel: 'Yo\'q',
-      accept: () => deleteCategory(category.id)
-    });
+    // confirmDialog({
+    //   message: `"${category.name}" kategoriyasini o'chirishni tasdiqlaysizmi?`,
+    //   header: 'Tasdiqlash',
+    //   icon: 'pi pi-exclamation-triangle',
+    //   acceptLabel: 'Ha',
+    //   rejectLabel: 'Yo\'q',
+    //   accept: () => deleteCategory(category.id)
+    // });
   };
 
   const deleteCategory = async (id: number) => {
@@ -354,7 +354,7 @@ export const CategoryTreeTable = () => {
         categories={categories}
         onSubmit={handleFormSubmit}
       />
-      <ConfirmDialog />
+      {/*<ConfirmDialog />*/}
     </div>
   );
 };
