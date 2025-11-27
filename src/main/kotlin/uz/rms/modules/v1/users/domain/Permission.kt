@@ -8,23 +8,23 @@ import uz.rms.common.BaseEntity
 
 @Entity
 @Table(name = "permissions")
-class Permission(
+class Permission()
+     : BaseEntity(), GrantedAuthority {
+
     @Column(nullable = false, unique = true)
-    var name: String,
+    lateinit var name: String
 
     @Column(nullable = false)
-    var description: String,
+    lateinit var description: String
 
     @Column(nullable = false)
-    var resource: String,
+    lateinit var resource: String
 
     @Column(nullable = false)
-    var action: String,
+    lateinit var action: String
 
     @ManyToMany(mappedBy = "permissions", fetch = FetchType.LAZY)
     var roles: MutableSet<Role> = mutableSetOf()
-
-) : BaseEntity(), GrantedAuthority {
 
     override fun getAuthority(): String = name
 

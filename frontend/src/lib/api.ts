@@ -17,6 +17,7 @@ import {
 import {PageResponse} from "@/types/api.ts";
 import {Warehouse} from "@/types/warehouse.ts";
 import { Customer } from "@/types/customer.types";
+import { AuditLog, AuditFilterParams, Page } from '@/types/audit.types';
 
 const API_URL = 'http://localhost:8080';
 const API_BASE = '/api';
@@ -59,6 +60,7 @@ async function apiRequest<T>(
     'Accept': 'application/json',
     ...customHeaders,
   };
+
 
   // Don't set Content-Type for FormData, let the browser set it with the correct boundary
   if (!(data instanceof FormData)) {
@@ -409,6 +411,30 @@ export const permissionApi = {
   update: (id: number, permission: Omit<Permission, 'id'>) => 
     api.put<Permission>(`/permissions/${id}`, permission),
   delete: (id: number) => api.delete(`/permissions/${id}`),
+};
+
+// Audit API
+export const auditApi = {
+  getAll: async (params?: AuditFilterParams): Promise<Page<AuditLog> | AuditLog[]> => {
+    const res = await api.get('/admin/audit/logs', { params });
+    const data: any = res.data;
+    if (data && typeof data === 'object') {
+      if ('data' in data && Array.isArray(data.data)) return data.data;
+      if ('content' in data && Array.isArray(data.content)) return data as Page<AuditLog>;
+    }
+    return data as AuditLog[];
+  },
+  export: async (params?: AuditFilterParams, format: 'csv' | 'xlsx' = 'csv') => {
+    const res = await api.get('/audit/logs/export', { params: { ...params, format }, responseType: 'blob' });
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `audit-logs-${new Date().toISOString().split('T')[0]}.${format === 'csv' ? 'csv' : 'xlsx'}`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    return true;
+  },
 };
 
 export const mediaApi = {

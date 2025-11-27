@@ -2,9 +2,12 @@ package uz.rms.modules.v1.users.services
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.password.PasswordEncoder
 
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import uz.rms.modules.v1.tenant.domain.Tenant
+import uz.rms.modules.v1.tenant.repository.TenantRepository
 import uz.rms.modules.v1.user.dto.UserDto
 import uz.rms.modules.v1.users.domain.User
 import uz.rms.modules.v1.users.repository.RoleRepository
@@ -16,8 +19,12 @@ class UserService(
     @Autowired
     private val userRepository: UserRepository,
     @Autowired
-    private val roleRepository: RoleRepository
+    private val roleRepository: RoleRepository,
+
+    @Autowired
+    private val tenantRepository: TenantRepository,
 ) {
+
 
     // Remove @PreAuthorize - authorization will be handled at controller level
     fun findAllUsers(): List<UserDto> {
@@ -32,8 +39,37 @@ class UserService(
         return userRepository.findByLogin(username).orElse(null)
     }
 
-    fun createUser(user: User): User {
-        return userRepository.save(user)
+    fun createUser(userDto: UserDto): UserDto {
+        if (userRepository.existsByLogin(userDto.username)) {
+            throw IllegalArgumentException("Username ${userDto.username} already exists")
+        }
+        if (userRepository.existsByEmail(userDto.email)) {
+            throw IllegalArgumentException("Email ${userDto.email} already exists")
+        }
+
+       val newtenant = tenantRepository.findByName(userDto.domain!!)
+            .orElseGet {
+                tenantRepository.save(Tenant(name = userDto.domain, domain = userDto.domain))
+            }
+
+        val user = User().apply {
+            login = userDto.username
+            phone = userDto.phone
+            email = userDto.email
+            firstName = userDto.firstName.toString()
+            lastName = userDto.lastName.toString()
+            enabled = userDto.active
+            passwords = userDto.password
+            tenant = newtenant
+        }
+
+        if (userDto.roleIds.isNotEmpty()) {
+            val roles = roleRepository.findAllById(userDto.roleIds).toMutableSet()
+            user.roles = roles
+        }
+
+        val savedUser = userRepository.save(user)
+        return UserDto.fromUser(savedUser) ?: throw IllegalStateException("Failed to convert saved user to DTO")
     }
 
     fun updateUser(user: User): User {

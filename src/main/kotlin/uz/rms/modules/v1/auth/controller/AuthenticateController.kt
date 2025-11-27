@@ -1,5 +1,5 @@
 package uz.rms.modules.v1.auth.controller
-
+import uz.rms.common.ApiResponse as CommonApiResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -28,6 +28,7 @@ import uz.rms.modules.v1.audit.services.AuditService
 import uz.rms.modules.v1.auth.dto.AuthResponse
 import uz.rms.modules.v1.auth.dto.LoginRequest
 import uz.rms.modules.v1.auth.dto.SignupRequest
+import uz.rms.modules.v1.user.dto.UserDto
 import uz.rms.modules.v1.users.dto.PermissionDto
 import uz.rms.modules.v1.users.dto.RoleDto
 import uz.rms.modules.v1.users.dto.UserInfo
@@ -161,23 +162,24 @@ class AuthenticationController(
         ApiResponse(responseCode = "401", description = "User not authenticated", content = [Content(schema = Schema(implementation = MessageResponse::class))])
     )
     @GetMapping("/me")
-    fun getCurrentUser(): ResponseEntity<UserInfo> {
+    fun getCurrentUser(): ResponseEntity<CommonApiResponse<UserDto?>?> {
         val authentication = SecurityContextHolder.getContext().authentication
         val userDetails = authentication.principal as UserDetails
         val user = userRepository.findByLogin(userDetails.username)
             .orElseThrow { RuntimeException("User not found") }
-
-        return ResponseEntity.ok(
-            UserInfo(
-                id = user.id,
-                username = user.username ?: "",
-                email = user.email ?: "",
-                firstName = user.firstName ?: "",
-                lastName = user.lastName ?: "",
-                roles = user.roles.map { RoleDto(it.id, it.name, it.description) },
-                permissions = user.permissions.map { PermissionDto(it.id, it.name) }
-            )
-        )
+        val userDto = UserDto.fromUser(user)
+        return ResponseEntity.ok(CommonApiResponse.success(userDto))
+//        return ResponseEntity.ok(
+//            UserInfo(
+//                id = user.id,
+//                username = user.username ?: "",
+//                email = user.email ?: "",
+//                firstName = user.firstName ?: "",
+//                lastName = user.lastName ?: "",
+//                roles = user.roles.map { RoleDto(it.id, it.name, it.description) },
+//                permissions = user.permissions.map { PermissionDto(it.id, it.name) }
+//            )
+//        )
     }
 }
 

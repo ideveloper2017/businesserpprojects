@@ -39,8 +39,8 @@ class UserController(
     )
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    fun getAllUsers(): ResponseEntity<List<UserDto>> {
-        return ResponseEntity.ok(userService.findAllUsers())
+    fun getAllUsers(): ResponseEntity<uz.rms.common.ApiResponse<List<UserDto>>?> {
+        return ResponseEntity.ok(uz.rms.common.ApiResponse.success(userService.findAllUsers()))
     }
 
     @Operation(summary = "Get user by ID", description = "Retrieve a specific user by their ID")
@@ -80,7 +80,7 @@ class UserController(
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    fun createUser(@RequestBody user: User): ResponseEntity<User> {
+    fun createUser(@RequestBody user: UserDto): ResponseEntity<UserDto> {
         return ResponseEntity.ok(userService.createUser(user))
     }
 

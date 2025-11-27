@@ -1,6 +1,8 @@
 package uz.rms.modules.v1.user.dto
 
+import uz.rms.modules.v1.tenant.domain.Tenant
 import uz.rms.modules.v1.users.domain.User
+import uz.rms.modules.v1.users.dto.PermissionDto
 
 
 data class UserDto(
@@ -12,7 +14,9 @@ data class UserDto(
     val firstName: String? = null,
     val lastName: String? = null,
     val active: Boolean = true,
-    val roleIds: List<Long> = emptyList()
+    val roleIds: List<Long> = emptyList(),
+    val permissions: List<PermissionDto> = emptyList(),
+    val domain: String?=null
 ) {
     companion object {
         fun fromUser(user: User?): UserDto? {
@@ -26,7 +30,8 @@ data class UserDto(
                     firstName = it.firstName,
                     lastName = it.lastName,
                     active = it.enabled,
-                    roleIds = it.roles.mapNotNull { role -> role.id }
+                    roleIds = it.roles.mapNotNull { role -> role.id },
+                    permissions = it.permissions.map { PermissionDto(it.id, it.name) }
                 )
             }
         }

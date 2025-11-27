@@ -8,6 +8,7 @@ export interface User {
   phone: string;
   active: boolean;
   roleIds: number[];
+  domain: string;
 }
 
 export interface Role {

@@ -113,21 +113,21 @@ class DataInitializer(
     @Transactional
      fun initializeRoles() {
         val roles = listOf(
-            Role(
-                name = "ADMIN",
-                description = "Administrator with full access",
+            Role().apply {
+                name = "ADMIN"
+                description = "Administrator with full access"
                 tenant = defaultTenant
-            ),
-            Role(
-                name = "MANAGER", 
-                description = "Manager with elevated access",
+            },
+            Role().apply {
+                name = "MANAGER"
+                description = "Manager with elevated access"
                 tenant = defaultTenant
-            ),
-            Role(
-                name = "USER", 
-                description = "Standard user access",
+            },
+            Role().apply {
+                name = "USER"
+                description = "Standard user access"
                 tenant = defaultTenant
-            )
+            }
         )
 
         roles.forEach { role ->
@@ -142,40 +142,143 @@ class DataInitializer(
 
     private fun initializePermissions() {
         val permissions = listOf(
-            // User permissions
-            Permission(name = "USER_READ", description = "Read user information", resource = "USER", action = "READ"),
-            Permission(name = "USER_CREATE", description = "Create new users", resource = "USER", action = "CREATE"),
-            Permission(name = "USER_UPDATE", description = "Update user information", resource = "USER", action = "UPDATE"),
-            Permission(name = "USER_DELETE", description = "Delete users", resource = "USER", action = "DELETE"),
-            Permission(name = "USER_CHANGE_PASSWORD", description = "Change user password", resource = "USER", action = "CHANGE_PASSWORD"),
-            Permission(name = "USER_TOGGLE_STATUS", description = "Enable/disable users", resource = "USER", action = "TOGGLE_STATUS"),
+            Permission().apply {
+                name = "USER_READ"
+                description = "Read user information"
+                resource = "USER"
+                action = "READ"
+            },
+            Permission().apply {
+                name = "USER_CREATE"
+                description = "Create new users"
+                resource = "USER"
+                action = "CREATE"
+            },
+            Permission().apply {
+                name = "USER_UPDATE"
+                description = "Update user information"
+                resource = "USER"
+                action = "UPDATE"
+            },
+            Permission().apply {
+                name = "USER_DELETE"
+                description = "Delete users"
+                resource = "USER"
+                action = "DELETE"
+            },
+            Permission().apply {
+                name = "USER_CHANGE_PASSWORD"
+                description = "Change user password"
+                resource = "USER"
+                action = "CHANGE_PASSWORD"
+            },
+            Permission().apply {
+                name = "USER_TOGGLE_STATUS"
+                description = "Enable/disable users"
+                resource = "USER"
+                action = "TOGGLE_STATUS"
+            },
 
             // Role permissions
-            Permission(name = "ROLE_READ", description = "Read role information", resource = "ROLE", action = "READ"),
-            Permission(name = "ROLE_CREATE", description = "Create new roles", resource = "ROLE", action = "CREATE"),
-            Permission(name = "ROLE_UPDATE", description = "Update role information", resource = "ROLE", action = "UPDATE"),
-            Permission(name = "ROLE_DELETE", description = "Delete roles", resource = "ROLE", action = "DELETE"),
-            Permission(name = "ROLE_ASSIGN", description = "Assign roles to users", resource = "ROLE", action = "ASSIGN"),
-            Permission(name = "ROLE_REVOKE", description = "Revoke roles from users", resource = "ROLE", action = "REVOKE"),
+            Permission().apply {
+                name = "ROLE_READ"
+                description = "Read role information"
+                resource = "ROLE"
+                action = "READ"
+            },
+            Permission().apply {
+                name = "ROLE_CREATE"
+                description = "Create new roles"
+                resource = "ROLE"
+                action = "CREATE"
+            },
+            Permission().apply {
+                name = "ROLE_UPDATE"
+                description = "Update role information"
+                resource = "ROLE"
+                action = "UPDATE"
+            },
+            Permission().apply {
+                name = "ROLE_DELETE"
+                description = "Delete roles"
+                resource = "ROLE"
+                action = "DELETE"
+            },
+            Permission().apply {
+                name = "ROLE_ASSIGN"
+                description = "Assign roles to users"
+                resource = "ROLE"
+                action = "ASSIGN"
+            },
+            Permission().apply {
+                name = "ROLE_REVOKE"
+                description = "Revoke roles from users"
+                resource = "ROLE"
+                action = "REVOKE"
+            },
 
             // Profile permissions
-            Permission(name = "PROFILE_READ", description = "View own profile", resource = "PROFILE", action = "READ"),
-            Permission(name = "PROFILE_UPDATE", description = "Update own profile", resource = "PROFILE", action = "UPDATE"),
-            Permission(name = "PROFILE_CHANGE_PASSWORD", description = "Change own password", resource = "PROFILE", action = "CHANGE_PASSWORD"),
+            Permission().apply {
+                name = "PROFILE_READ"
+                description = "View own profile"
+                resource = "PROFILE"
+                action = "READ"
+            },
+            Permission().apply {
+                name = "PROFILE_UPDATE"
+                description = "Update own profile"
+                resource = "PROFILE"
+                action = "UPDATE"
+            },
+            Permission().apply {
+                name = "PROFILE_CHANGE_PASSWORD"
+                description = "Change own password"
+                resource = "PROFILE"
+                action = "CHANGE_PASSWORD"
+            },
 
             // Audit log permissions
-            Permission(name = "AUDIT_READ", description = "View audit logs", resource = "AUDIT", action = "READ"),
-            Permission(name = "AUDIT_EXPORT", description = "Export audit logs", resource = "AUDIT", action = "EXPORT"),
+            Permission().apply {
+                name = "AUDIT_READ"
+                description = "View audit logs"
+                resource = "AUDIT"
+                action = "READ"
+            },
+            Permission().apply {
+                name = "AUDIT_EXPORT"
+                description = "Export audit logs"
+                resource = "AUDIT"
+                action = "EXPORT"
+            },
 
             // System settings permissions
-            Permission(name = "SETTINGS_READ", description = "View system settings", resource = "SETTINGS", action = "READ"),
-            Permission(name = "SETTINGS_UPDATE", description = "Update system settings", resource = "SETTINGS", action = "UPDATE"),
+            Permission().apply {
+                name = "SETTINGS_READ"
+                description = "View system settings"
+                resource = "SETTINGS"
+                action = "READ"
+            },
+            Permission().apply {
+                name = "SETTINGS_UPDATE"
+                description = "Update system settings"
+                resource = "SETTINGS"
+                action = "UPDATE"
+            },
 
             // Dashboard permissions
-            Permission(name = "DASHBOARD_VIEW", description = "View dashboard", resource = "DASHBOARD", action = "VIEW"),
-            Permission(name = "DASHBOARD_EXPORT", description = "Export dashboard data", resource = "DASHBOARD", action = "EXPORT")
+            Permission().apply {
+                name = "DASHBOARD_VIEW"
+                description = "View dashboard"
+                resource = "DASHBOARD"
+                action = "VIEW"
+            },
+            Permission().apply {
+                name = "DASHBOARD_EXPORT"
+                description = "Export dashboard data"
+                resource = "DASHBOARD"
+                action = "EXPORT"
+            }
         )
-
         permissions.forEach { permission ->
             if (!permissionRepository.existsByName(permission.name)) {
                 permissionRepository.save(permission)
@@ -223,6 +326,7 @@ class DataInitializer(
                 "DASHBOARD_VIEW"
             )
         }.toMutableSet()
+        userRole.permissions = userPermissions
         roleRepository.save(userRole)
         println("✅ Assigned ${userPermissions.size} permissions to USER role")
     }

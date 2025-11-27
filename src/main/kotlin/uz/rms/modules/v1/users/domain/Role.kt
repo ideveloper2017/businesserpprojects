@@ -10,12 +10,12 @@ import uz.rms.modules.v1.tenant.domain.Tenant
 @Table(name = "roles", 
     uniqueConstraints = [UniqueConstraint(columnNames = ["name", "tenant_id"])]
 )
-class Role(
+class Role() : BaseEntity(), GrantedAuthority {
     @Column(nullable = false)
-    var name: String,
+    lateinit var name: String
 
     @Column(nullable = false)
-    var description: String,
+    lateinit var description: String
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -23,13 +23,11 @@ class Role(
         joinColumns = [JoinColumn(name = "role_id")],
         inverseJoinColumns = [JoinColumn(name = "permission_id")]
     )
-    var permissions: MutableSet<Permission> = mutableSetOf(),
+    var permissions: MutableSet<Permission> = mutableSetOf()
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tenant_id", nullable = false)
-    val tenant: Tenant
-
-) : BaseEntity(), GrantedAuthority {
+    lateinit var tenant: Tenant
 
     override fun getAuthority(): String = "ROLE_$name"
 

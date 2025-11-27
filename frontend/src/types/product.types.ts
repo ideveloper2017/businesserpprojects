@@ -105,7 +105,7 @@ export interface InventoryItem {
   lastRestocked: string;
 }
 
-// Dashboard types
+// AdminDashboard types
 export interface SalesSummary {
   daily: number;
   weekly: number;
