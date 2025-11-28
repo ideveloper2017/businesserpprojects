@@ -29,8 +29,6 @@ import uz.rms.modules.v1.auth.dto.AuthResponse
 import uz.rms.modules.v1.auth.dto.LoginRequest
 import uz.rms.modules.v1.auth.dto.SignupRequest
 import uz.rms.modules.v1.user.dto.UserDto
-import uz.rms.modules.v1.users.dto.PermissionDto
-import uz.rms.modules.v1.users.dto.RoleDto
 import uz.rms.modules.v1.users.dto.UserInfo
 import uz.rms.modules.v1.users.repository.UserRepository
 

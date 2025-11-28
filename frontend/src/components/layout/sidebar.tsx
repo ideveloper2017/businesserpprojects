@@ -125,8 +125,15 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 min-h-screen bg-card border-r flex flex-col">
-      <div className="h-16 flex items-center px-4 border-b">
-        <h1 className="text-lg font-bold text-primary">POS Admin</h1>
+      <div className="px-4 py-6 border-b space-y-4">
+        <div>
+          <p className="text-xs uppercase tracking-wide text-muted-foreground">Workspace</p>
+          <h1 className="text-xl font-semibold text-primary">Business ERP</h1>
+          <p className="text-xs text-muted-foreground">Manage your tenants</p>
+        </div>
+        <div className="p-3 rounded-lg border bg-background">
+          <TenantSelector />
+        </div>
       </div>
 
       <nav className="flex-1 overflow-y-auto py-2">
@@ -199,10 +206,7 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className="border-t p-2">
-        <div className="mb-3">
-          <TenantSelector />
-        </div>
+      <div className="border-t p-3 space-y-2">
         <NavLink
           to="/settings"
           className={({ isActive }) =>

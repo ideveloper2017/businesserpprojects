@@ -1,23 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 export function TenantSelector() {
   const [tenantId, setTenantId] = useState<string>('');
 
+  const tenants = useMemo(() => {
+    const envTenants = (import.meta as any).env?.VITE_TENANTS;
+    if (envTenants) {
+      try {
+        const parsed = JSON.parse(envTenants);
+        if (Array.isArray(parsed)) {
+          return parsed;
+        }
+      } catch (err) {
+        return envTenants.split(',').map((item: string) => item.trim()).filter(Boolean);
+      }
+      return envTenants.split(',').map((item: string) => item.trim()).filter(Boolean);
+    }
+    return ['default', 'demo', 'enterprise'];
+  }, []);
+
   useEffect(() => {
     const saved = typeof window !== 'undefined' ? localStorage.getItem('tenantId') : '';
     const fallback = (import.meta as any).env?.VITE_DEFAULT_TENANT_ID || '';
-    setTenantId(saved || fallback || 'default');
+    const initial = saved || fallback || tenants[0] || 'default';
+    setTenantId(initial);
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleSelect = (value: string) => {
     setTenantId(value);
-  };
-
-  const apply = () => {
     if (typeof window !== 'undefined') {
-      if (tenantId) {
-        localStorage.setItem('tenantId', tenantId);
+      if (value) {
+        localStorage.setItem('tenantId', value);
       } else {
         localStorage.removeItem('tenantId');
       }
@@ -28,21 +43,18 @@ export function TenantSelector() {
   return (
     <div className="space-y-2">
       <label className="text-xs text-muted-foreground">Tenant</label>
-      <div className="flex gap-2">
-        <input
-          className="flex-1 px-2 py-1 text-sm rounded-md border"
-          placeholder="Enter tenant id"
-          value={tenantId}
-          onChange={handleChange}
-        />
-        <button
-          type="button"
-          className="px-2 py-1 text-sm rounded-md bg-primary text-primary-foreground"
-          onClick={apply}
-        >
-          Apply
-        </button>
-      </div>
+      <Select value={tenantId} onValueChange={handleSelect}>
+        <SelectTrigger className="w-full text-sm">
+          <SelectValue placeholder="Select tenant" />
+        </SelectTrigger>
+        <SelectContent>
+          {tenants.map((tenant: string) => (
+            <SelectItem key={tenant} value={tenant}>
+              {tenant}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }
