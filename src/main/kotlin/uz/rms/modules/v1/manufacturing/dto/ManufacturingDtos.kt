@@ -16,6 +16,14 @@ data class RecipeDto(
     val name: String,
     val productId: Long,
     val outputQuantity: BigDecimal,
+    val yield: BigDecimal,
+    val laborCost: BigDecimal,
+    val overheadCost: BigDecimal,
+    val estimatedCost: BigDecimal,
+    val totalProduced: BigDecimal = BigDecimal.ZERO,
+    val totalOrders: Int = 0,
+    val completedOrders: Int = 0,
+    val completionPercentage: BigDecimal = BigDecimal.ZERO,
     val items: List<RecipeItemDto>
 )
 
@@ -24,6 +32,20 @@ data class CreateRecipeRequest(
     val version: String,
     val productId: Long,
     val outputQuantity: BigDecimal,
+    val yield: BigDecimal = BigDecimal.ONE,
+    val laborCost: BigDecimal = BigDecimal.ZERO,
+    val overheadCost: BigDecimal = BigDecimal.ZERO,
+    val items: List<RecipeItemDto>
+)
+
+data class UpdateRecipeRequest(
+    val name: String,
+    val version: String,
+    val productId: Long,
+    val outputQuantity: BigDecimal,
+    val yield: BigDecimal = BigDecimal.ONE,
+    val laborCost: BigDecimal = BigDecimal.ZERO,
+    val overheadCost: BigDecimal = BigDecimal.ZERO,
     val items: List<RecipeItemDto>
 )
 
@@ -42,6 +64,10 @@ data class ProductionOrderDto(
     val workCenter: String,
     val plannedQuantity: BigDecimal,
     val producedQuantity: BigDecimal
+)
+
+data class AdjustCompletedQuantityRequest(
+    val amount: BigDecimal
 )
 
 // Material Issue / Output

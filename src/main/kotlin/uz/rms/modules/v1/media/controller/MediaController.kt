@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.core.io.ByteArrayResource
 import org.springframework.core.io.Resource
@@ -28,6 +29,7 @@ import uz.rms.modules.v1.media.service.MediaService
 @RequestMapping("/api/v1/media")
 @Tag(name = "Media Library", description = "API for managing media files (images, documents, etc.)")
 //@SecurityRequirement(name = "JWT")
+@SecurityRequirement(name = "bearerAuth")
 class MediaController(
     private val mediaService: MediaService
 ) {

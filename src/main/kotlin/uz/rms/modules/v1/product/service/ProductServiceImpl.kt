@@ -19,6 +19,7 @@ import uz.rms.modules.v1.product.exception.InsufficientStockException
 import uz.rms.modules.v1.product.exception.ProductNotFoundException
 import uz.rms.modules.v1.product.exception.ProductSkuNotFoundException
 import uz.rms.modules.v1.product.mapper.ProductMapper
+import uz.rms.modules.v1.product.model.ProductType
 import uz.rms.modules.v1.product.repository.ProductCategoryRepository
 import uz.rms.modules.v1.product.repository.ProductRepository
 import uz.rms.modules.v1.units.repository.UnitRepository
@@ -204,6 +205,7 @@ class ProductServiceImpl(
         minQuantity: Int?,
         maxQuantity: Int?,
         active: Boolean?,
+        type: ProductType?,
         pageable: Pageable
     ): Page<ProductResponse> {
         log.debug(
@@ -220,6 +222,7 @@ class ProductServiceImpl(
             minQuantity = minQuantity,
             maxQuantity = maxQuantity,
             active = active,
+            type = type,
             pageable = pageable
         )
 

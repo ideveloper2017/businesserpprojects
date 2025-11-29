@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import io.swagger.v3.oas.annotations.media.Schema
 import uz.rms.modules.v1.units.dto.UnitDto
 import uz.rms.modules.v1.product.model.ProductCategory
+import uz.rms.modules.v1.product.model.ProductType
 
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -49,6 +50,9 @@ data class ProductResponse(
     @field:Schema(description = "Whether the product is active and available for sale", 
                  example = "true", required = true)
     val active: Boolean = true,
+
+    @field:Schema(description = "Product type (RAW_MATERIAL, FINISHED_GOOD, etc.)", example = "RAW_MATERIAL")
+    val type: ProductType? = null,
 
     @field:Schema(description = "Date and time when the product was created", 
                  example = "2023-01-01T12:00:00")

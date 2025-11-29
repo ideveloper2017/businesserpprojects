@@ -25,6 +25,9 @@ import { PaymentDetailPage } from "@/pages/payments/PaymentDetailPage";
 import { WarehouseRoutes } from "@/pages/warehouses/WarehouseRoutes";
 import RecipesPage from "@/pages/manufacturing/RecipesPage";
 import RecipeEditorPage from "@/pages/manufacturing/RecipeEditorPage";
+import RecipeDetailPage from "@/pages/manufacturing/RecipeDetailPage";
+
+import MfgOrderDetailPage from "@/pages/manufacturing/OrderDetailPage";
 
 
 const AppRouter = () => {
@@ -253,6 +256,16 @@ const AppRouter = () => {
                 </AuthGuard>
             }
         />
+         <Route
+             path="/manufacturing/recipes/:id"
+             element={
+                 <AuthGuard>
+                     <AdminDashboard>
+                         <RecipeDetailPage />
+                     </AdminDashboard>
+                 </AuthGuard>
+             }
+         />
         <Route
             path="/manufacturing/recipes/new"
             element={
@@ -278,7 +291,7 @@ const AppRouter = () => {
             element={
                 <AuthGuard>
                     <AdminDashboard>
-                        <OrderDetailPage />
+                        <MfgOrderDetailPage />
                     </AdminDashboard>
                 </AuthGuard>
             }

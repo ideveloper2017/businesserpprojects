@@ -6,6 +6,7 @@ import jakarta.validation.constraints.DecimalMin
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
+import uz.rms.modules.v1.product.model.ProductType
 import java.math.BigDecimal
 
 /**
@@ -49,7 +50,10 @@ data class CreateProductRequest(
     val unitId: Long,
 
     @field:Schema(description = "Whether the product is active and available for sale", example = "true")
-    val active: Boolean? = true
+    val active: Boolean? = true,
+
+    @field:Schema(description = "Product type (RAW_MATERIAL, FINISHED_GOOD, SEMI_FINISHED, PACKAGING)", example = "RAW_MATERIAL")
+    val type: ProductType = ProductType.RAW_MATERIAL
 )
 
 /**
@@ -85,5 +89,8 @@ data class UpdateProductRequest(
     val unitId: Long? = null,
 
     @field:Schema(description = "Whether the product is active and available for sale", example = "true")
-    val active: Boolean? = null
+    val active: Boolean? = null,
+
+    @field:Schema(description = "Product type (RAW_MATERIAL, FINISHED_GOOD, SEMI_FINISHED, PACKAGING)")
+    val type: ProductType? = null
 )

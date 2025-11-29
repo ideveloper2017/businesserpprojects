@@ -90,6 +90,11 @@ class Product : BaseEntity() {
     @Schema(description = "URL to the product image")
     var imageUrl: String? = null
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false, length = 30)
+    @Schema(description = "Product type to distinguish RAW_MATERIAL vs FINISHED_GOOD, etc.")
+    var type: ProductType = ProductType.RAW_MATERIAL
+
     /**
      * Updates the SKU of the product.
      * This method is protected to ensure SKU updates go through proper validation.
@@ -122,4 +127,11 @@ class Product : BaseEntity() {
         quantityInStock -= quantity
         return quantityInStock
     }
+}
+
+enum class ProductType {
+    RAW_MATERIAL,
+    FINISHED_GOOD,
+    SEMI_FINISHED,
+    PACKAGING
 }

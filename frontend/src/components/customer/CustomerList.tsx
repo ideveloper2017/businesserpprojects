@@ -45,6 +45,7 @@ export function CustomerList() {
 
   const loadCustomers = async () => {
     const data = await fetchCustomers();
+    console.log(data);
     if (data) {
       setCustomers(data);
     }

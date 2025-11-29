@@ -1,14 +1,6 @@
 import { useState } from 'react';
-import {
-  Customer,
-  getCustomers,
-  getCustomerById,
-  createCustomer,
-  updateCustomer,
-  deleteCustomer,
-  searchCustomers,
-
-} from '@/lib/api';
+import {ApiResponse, customerApi} from '@/lib/api';
+import {Customer} from "@/types/customer.types";
 
 export function useCustomers() {
   const [loading, setLoading] = useState(false);
@@ -18,7 +10,7 @@ export function useCustomers() {
     setLoading(true);
     setError(null);
     try {
-      const response = await getCustomers();
+      const response = await customerApi.getCustomers();
       setLoading(false);
 
       if (!response.success) {
@@ -26,6 +18,7 @@ export function useCustomers() {
         return null;
       }
 
+      console.log(response.data || []);
       return response.data || [];
     } catch (err) {
       setLoading(false);
@@ -38,7 +31,7 @@ export function useCustomers() {
     setLoading(true);
     setError(null);
     try {
-      const response = await getCustomerById(id);
+      const response = await customerApi.getCustomerById(id);
       setLoading(false);
 
       if (!response.success) {
@@ -58,7 +51,7 @@ export function useCustomers() {
     setLoading(true);
     setError(null);
     try {
-      const response = await createCustomer(customer);
+      const response = await customerApi.createCustomer(customer);
       setLoading(false);
 
       if (!response.success) {
@@ -78,7 +71,7 @@ export function useCustomers() {
     setLoading(true);
     setError(null);
     try {
-      const response = await updateCustomer(id, customer);
+      const response = await customerApi.updateCustomer(id, customer);
       setLoading(false);
 
       if (!response.success) {
@@ -98,7 +91,7 @@ export function useCustomers() {
     setLoading(true);
     setError(null);
     try {
-      const response = await deleteCustomer(id);
+      const response = await customerApi.deleteCustomer(id);
       setLoading(false);
 
       if (!response.success) {
@@ -114,11 +107,11 @@ export function useCustomers() {
     }
   };
 
-  const searchForCustomers = async (query: string): Promise<Customer[] | null> => {
+  const searchForCustomers = async (query: string): Promise<ApiResponse<Customer[]> | any> => {
     setLoading(true);
     setError(null);
     try {
-      const response = await searchCustomers(query);
+      const response = await customerApi.searchCustomers(query);
       setLoading(false);
 
       if (!response.success) {

@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile
 import uz.rms.modules.v1.product.dto.ProductResponse
 import uz.rms.modules.v1.product.dto.request.CreateProductRequest
 import uz.rms.modules.v1.product.dto.request.UpdateProductRequest
+import uz.rms.modules.v1.product.model.ProductType
 
 
 import java.math.BigDecimal
@@ -25,6 +26,7 @@ interface ProductService {
         minQuantity: Int? = null,
         maxQuantity: Int? = null,
         active: Boolean? = true,
+        type: ProductType? = null,
         pageable: Pageable
     ): Page<ProductResponse>
     fun updateProductImage(productId: Long, image: MultipartFile): ProductResponse

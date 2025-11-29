@@ -12,7 +12,7 @@ spring:
   application:
     name: BillingAqua
   profiles:
-    active: h2
+    active: postgresql-dev
   main:
     allow-bean-definition-overriding: false
 

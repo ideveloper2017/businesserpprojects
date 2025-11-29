@@ -21,7 +21,7 @@ spring:
     serialization:
       indent-output: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/aquabill
+    url: jdbc:postgresql://localhost:5432/rmsdb
     username: postgres
     password: postgres
     hikari:

@@ -2,6 +2,7 @@ package uz.rms.modules.v1.product.dto
 
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.*
+import uz.rms.modules.v1.product.model.ProductType
 import java.math.BigDecimal
 
 /**
@@ -57,6 +58,9 @@ data class CreateProductRequest(
 
     @Schema(description = "Whether the product is active and available for sale", example = "true", defaultValue = "true")
     val active: Boolean = true
+    ,
+    @Schema(description = "Product type (RAW_MATERIAL, FINISHED_GOOD, SEMI_FINISHED, PACKAGING)", example = "RAW_MATERIAL")
+    val type: ProductType = ProductType.RAW_MATERIAL
 ) {
     /**
      * Validates the business rules for this request
@@ -110,6 +114,9 @@ data class UpdateProductRequest(
 
     @Schema(description = "Whether the product is active and available for sale", example = "true")
     val active: Boolean? = null
+    ,
+    @Schema(description = "Product type (RAW_MATERIAL, FINISHED_GOOD, SEMI_FINISHED, PACKAGING)")
+    val type: ProductType? = null
 ) {
     /**
      * Validates the business rules for this request

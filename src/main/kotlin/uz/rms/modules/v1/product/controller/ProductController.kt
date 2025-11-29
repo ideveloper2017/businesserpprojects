@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.responses.ApiResponse as SwaggerApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
@@ -22,6 +23,7 @@ import java.net.URI
 import org.slf4j.LoggerFactory
 import uz.rms.common.ApiResponse
 import uz.rms.modules.v1.product.dto.ProductResponse
+import uz.rms.modules.v1.product.model.ProductType
 import uz.rms.modules.v1.product.dto.request.CreateProductRequest
 import uz.rms.modules.v1.product.dto.request.UpdateProductRequest
 import uz.rms.modules.v1.product.service.ProductService
@@ -29,6 +31,7 @@ import uz.rms.modules.v1.product.service.ProductService
 @RestController
 @RequestMapping("/api/v1/products")
 @Tag(name = "Products", description = "Product management APIs")
+@SecurityRequirement(name = "bearerAuth")
 class ProductController(
     private val productService: ProductService
 ) {
@@ -188,6 +191,9 @@ class ProductController(
         @Parameter(description = "Filter by active status (default: true)")
         @RequestParam(required = false, defaultValue = "true") active: Boolean?,
 
+        @Parameter(description = "Filter by product type")
+        @RequestParam(required = false) type: ProductType?,
+
         @Parameter(hidden = true)
         @PageableDefault(size = 20) pageable: Pageable
     ): ResponseEntity<ApiResponse<Page<ProductResponse>>> {
@@ -199,6 +205,7 @@ class ProductController(
             minQuantity = minQuantity,
             maxQuantity = maxQuantity,
             active = active,
+            type = type,
             pageable = pageable
         )
         return ResponseEntity.ok(ApiResponse.success("Products retrieved successfully", products))

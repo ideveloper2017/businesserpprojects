@@ -44,6 +44,7 @@ interface ProductRepository : JpaRepository<Product, Long>, JpaSpecificationExec
         AND (:minQuantity IS NULL OR p.quantityInStock >= :minQuantity)
         AND (:maxQuantity IS NULL OR p.quantityInStock <= :maxQuantity)
         AND (:active IS NULL OR p.active = :active)
+        AND (:type IS NULL OR p.type = :type)
         AND (
             :search IS NULL 
             OR LOWER(CAST(p.name AS text)) LIKE LOWER(CONCAT('%', CAST(:search AS text), '%')) 
@@ -59,6 +60,7 @@ interface ProductRepository : JpaRepository<Product, Long>, JpaSpecificationExec
         @Param("minQuantity") minQuantity: Int?,
         @Param("maxQuantity") maxQuantity: Int?,
         @Param("active") active: Boolean?,
+        @Param("type") type: uz.rms.modules.v1.product.model.ProductType?,
         pageable: Pageable
     ): Page<Product>
 }

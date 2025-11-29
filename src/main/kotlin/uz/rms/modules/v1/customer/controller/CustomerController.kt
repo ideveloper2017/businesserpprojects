@@ -1,5 +1,6 @@
 package uz.rms.modules.v1.customer.controller
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -12,6 +13,7 @@ import uz.rms.modules.v1.customer.service.CustomerService
 @RestController
 @RequestMapping("/api/v1/customers")
 @Tag(name = "Customer Management", description = "Endpoints for managing customers")
+@SecurityRequirement(name = "bearerAuth")
 class CustomerController(private val customerService: CustomerService) {
 
     @GetMapping

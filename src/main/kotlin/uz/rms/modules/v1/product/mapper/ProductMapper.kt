@@ -73,6 +73,7 @@ class ProductMapper {
             category = product.category?.let { toCategoryDto(it) },
             units = toUnitDto(units),
             active = product.active,
+            type = product.type,
             createdAt = product.createdAt,
             updatedAt = product.updatedAt
         )
@@ -177,6 +178,7 @@ class ProductMapper {
             this.units = units
             this.category = category
             active = request.active ?: true
+            type = request.type
         }
     }
 
