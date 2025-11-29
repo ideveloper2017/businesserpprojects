@@ -917,7 +917,6 @@ export type RecipeItemDto = {
 export type RecipeDto = {
   id?: number;
   name: string;
-  version: string;
   productId: number;
   outputQuantity: number;
   items: RecipeItemDto[];

@@ -72,7 +72,7 @@ export default function OrdersPage() {
             </SelectTrigger>
             <SelectContent>
               {recipes.map(r => (
-                <SelectItem key={r.id} value={String(r.id)}>{r.name} v{r.version}</SelectItem>
+                <SelectItem key={r.id} value={String(r.id)}>{r.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>

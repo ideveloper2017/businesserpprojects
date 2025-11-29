@@ -47,7 +47,6 @@ export default function RecipesPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Version</TableHead>
                   <TableHead>Product ID</TableHead>
                   <TableHead>Output Qty</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -57,7 +56,6 @@ export default function RecipesPage() {
                 {(loading ? [] : filtered).map(r => (
                   <TableRow key={r.id}>
                     <TableCell>{r.name}</TableCell>
-                    <TableCell>{r.version}</TableCell>
                     <TableCell>{r.productId}</TableCell>
                     <TableCell>{r.outputQuantity}</TableCell>
                     <TableCell className="text-right">
@@ -67,7 +65,7 @@ export default function RecipesPage() {
                 ))}
                 {!loading && filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">No recipes</TableCell>
+                    <TableCell colSpan={4} className="h-24 text-center">No recipes</TableCell>
                   </TableRow>
                 )}
               </TableBody>

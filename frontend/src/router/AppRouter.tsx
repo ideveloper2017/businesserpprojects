@@ -24,6 +24,7 @@ import { EditPaymentPage } from "@/pages/payments/EditPaymentPage";
 import { PaymentDetailPage } from "@/pages/payments/PaymentDetailPage";
 import { WarehouseRoutes } from "@/pages/warehouses/WarehouseRoutes";
 import RecipesPage from "@/pages/manufacturing/RecipesPage";
+import RecipeEditorPage from "@/pages/manufacturing/RecipeEditorPage";
 
 
 const AppRouter = () => {
@@ -248,6 +249,16 @@ const AppRouter = () => {
                 <AuthGuard>
                     <AdminDashboard>
                         <RecipesPage />
+                    </AdminDashboard>
+                </AuthGuard>
+            }
+        />
+        <Route
+            path="/manufacturing/recipes/new"
+            element={
+                <AuthGuard>
+                    <AdminDashboard>
+                        <RecipeEditorPage />
                     </AdminDashboard>
                 </AuthGuard>
             }

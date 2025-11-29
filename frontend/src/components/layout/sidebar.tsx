@@ -86,6 +86,22 @@ export function Sidebar() {
       icon: BarChart2,
     },
     {
+      name: "Manufacturing",
+      icon: Package,
+      subItems: [
+        {
+          name: "Recipes",
+          href: "/manufacturing/recipes",
+          icon: Layers,
+        },
+        {
+          name: "Orders",
+          href: "/manufacturing/orders",
+          icon: Package,
+        },
+      ],
+    },
+    {
       name: "Audit Logs",
       href: "/audit",
       icon: BarChart2,
