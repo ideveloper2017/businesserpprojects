@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { useNavigate } from 'react-router-dom'
 import { manufacturingApi, RecipeDto, RecipeItemDto } from '@/lib/api'
-import { useToast } from '@/components/ui/use-toast'
+import { useToast } from '@/components/ui/toast'
 
 export default function RecipeEditorPage() {
   const navigate = useNavigate()
