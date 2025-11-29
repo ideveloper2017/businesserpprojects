@@ -18,12 +18,12 @@ import { OrderDetailPage } from "@/pages/orders/OrderDetailPage";
 import { EditOrderPage } from "@/pages/orders/EditOrderPage";
 import { UnitsPage } from "@/pages/units";
 import { PosPage } from "@/pages/pos/PosPage";
-import { SettingsPage } from "@/pages/settings/SettingsPage";
 import { PaymentsPage } from "@/pages/payments/PaymentsPage";
 import { CreatePaymentPage } from "@/pages/payments/CreatePaymentPage";
 import { EditPaymentPage } from "@/pages/payments/EditPaymentPage";
 import { PaymentDetailPage } from "@/pages/payments/PaymentDetailPage";
 import { WarehouseRoutes } from "@/pages/warehouses/WarehouseRoutes";
+import RecipesPage from "@/pages/manufacturing/RecipesPage";
 
 
 const AppRouter = () => {
@@ -243,16 +243,37 @@ const AppRouter = () => {
             }
         />
         <Route
-            path="/settings"
+            path="/manufacturing/recipes"
             element={
                 <AuthGuard>
                     <AdminDashboard>
-                        <SettingsPage />
+                        <RecipesPage />
                     </AdminDashboard>
                 </AuthGuard>
             }
         />
-      </Routes>
+        <Route
+            path="/manufacturing/orders"
+            element={
+                <AuthGuard>
+                    <AdminDashboard>
+                        <OrdersPage />
+                    </AdminDashboard>
+                </AuthGuard>
+            }
+        />
+        <Route
+            path="/manufacturing/orders/:id"
+            element={
+                <AuthGuard>
+                    <AdminDashboard>
+                        <OrderDetailPage />
+                    </AdminDashboard>
+                </AuthGuard>
+            }
+        />
+     </Routes>
     )
 }
+
 export default AppRouter;

@@ -29,7 +29,7 @@ import {
   Info,
   Download
 } from 'lucide-react';
-import { cn, formatFileSize } from '@/lib/utils';
+import { cn} from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -49,8 +49,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import {MediaFile} from "@/types/media-library.ts";
+import {MediaFile} from "@/types/media-library";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -59,6 +58,7 @@ import {
   BreadcrumbPage
 } from "@/components/ui/breadcrumb";
 import {Label} from "@/components/ui/label.tsx";
+import {formatFileSize} from "@/utils/formatters";
 
 
 export function MediaLibrary() {

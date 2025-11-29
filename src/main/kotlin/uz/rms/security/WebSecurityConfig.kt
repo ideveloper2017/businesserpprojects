@@ -90,6 +90,7 @@ class WebSecurityConfig(
                 auth.requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 auth.requestMatchers("/api/v1/manager/**").hasAnyRole("ADMIN", "MANAGER")
                 auth.requestMatchers("/api/v1/user/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                auth.requestMatchers("/api/v1/manufacturing/**").hasAnyRole("ADMIN", "MANAGER", "PRODUCTION")
 
 //                // HTTP method restrictions
 //                auth.requestMatchers(HttpMethod.GET, "/api/resources/**").hasAnyRole("USER", "MANAGER", "ADMIN")

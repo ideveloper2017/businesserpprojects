@@ -1,7 +1,7 @@
 import { CreditCard, ArrowUpCircle, ArrowDownCircle, DollarSign } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency } from '@/utils/formatters';
 
 interface PaymentsSummaryProps {
   totalPayments: number;

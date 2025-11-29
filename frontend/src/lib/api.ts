@@ -906,6 +906,102 @@ export const warehouseApi = {
       apiRequest<Array<{ value: number; label: string }>>('/warehouses/options')
 };
 
+// Manufacturing API
+export type RecipeItemDto = {
+  productId: number;
+  quantity: number;
+  uom: string;
+  lossPercent: number;
+};
+
+export type RecipeDto = {
+  id?: number;
+  name: string;
+  version: string;
+  productId: number;
+  outputQuantity: number;
+  items: RecipeItemDto[];
+};
+
+export type CreateRecipeRequest = RecipeDto;
+
+export type CreateProductionOrderRequest = {
+  recipeId: number;
+  workCenter: string;
+  plannedQuantity: number;
+};
+
+export type ProductionOrderDto = {
+  id?: number;
+  status: string;
+  recipeId: number;
+  workCenter: string;
+  plannedQuantity: number;
+  producedQuantity: number;
+};
+
+export type IssueItemDto = {
+  productId: number;
+  quantity: number;
+  batchNumber?: string | null;
+  expiryDate?: string | null;
+};
+
+export type IssueMaterialsRequest = { items: IssueItemDto[] };
+
+export type OutputItemDto = {
+  productId: number;
+  quantity: number;
+  batchNumber?: string | null;
+  expiryDate?: string | null;
+};
+
+export type ReceiveOutputRequest = { items: OutputItemDto[] };
+
+export const manufacturingApi = {
+  // Recipes
+  createRecipe: async (data: CreateRecipeRequest): Promise<RecipeDto> => {
+    const res = await api.post<ApiResponse<RecipeDto>>('/manufacturing/recipes', data);
+    return (res.data as any)?.data ?? (res.data as any);
+  },
+  listRecipes: async (): Promise<RecipeDto[]> => {
+    const res = await api.get<ApiResponse<RecipeDto[]>>('/manufacturing/recipes');
+    const d: any = res.data;
+    return d?.data ?? d;
+  },
+
+  // Production orders
+  createOrder: async (data: CreateProductionOrderRequest): Promise<ProductionOrderDto> => {
+    const res = await api.post<ApiResponse<ProductionOrderDto>>('/manufacturing/orders', data);
+    return (res.data as any)?.data ?? (res.data as any);
+  },
+  getOrder: async (id: number): Promise<ProductionOrderDto> => {
+    const res = await api.get<ApiResponse<ProductionOrderDto>>(`/manufacturing/orders/${id}`);
+    const d: any = res.data;
+    return d?.data ?? d;
+  },
+  changeOrderStatus: async (id: number, status: string): Promise<ProductionOrderDto> => {
+    const res = await api.put<ApiResponse<ProductionOrderDto>>(`/manufacturing/orders/${id}/status`, undefined, { params: { status } });
+    const d: any = res.data;
+    return d?.data ?? d;
+  },
+  listOrders: async (): Promise<ProductionOrderDto[]> => {
+    const res = await api.get<ApiResponse<ProductionOrderDto[]>>('/manufacturing/orders');
+    const d: any = res.data;
+    return d?.data ?? d;
+  },
+
+  // Issue / Output
+  issueMaterials: async (id: number, data: IssueMaterialsRequest): Promise<boolean> => {
+    const res = await api.post<ApiResponse<void>>(`/manufacturing/orders/${id}/issue`, data);
+    return !!res.data;
+  },
+  receiveOutput: async (id: number, data: ReceiveOutputRequest): Promise<boolean> => {
+    const res = await api.post<ApiResponse<void>>(`/manufacturing/orders/${id}/output`, data);
+    return !!res.data;
+  },
+};
+
 // Customer API functions
 export async function getCustomers(): Promise<ApiResponse<Customer[]>> {
   return apiRequest<Customer[]>('/customers');

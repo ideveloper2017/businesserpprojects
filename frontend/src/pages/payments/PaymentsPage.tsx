@@ -16,7 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { PaymentStatusBadge } from '@/components/payments/PaymentStatusBadge';
 import { PaymentsSummary } from '@/components/payments/PaymentsSummary';
 import { PaymentActions } from '@/components/payments/PaymentActions';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency } from '@/utils/formatters';
 import {PaymentFilterParams, PaymentMethod, PaymentStatus} from "@/types/payment.types";
 import {usePayments} from "@/hooks/usePayments";
 

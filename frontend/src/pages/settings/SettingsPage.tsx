@@ -5,8 +5,7 @@ import { CompanySettings } from './sections/CompanySettings';
 import { SMTPSettings } from './sections/SMTPSettings';
 import { BackupSettings } from './sections/BackupSettings';
 import { GeneralSettings } from './sections/GeneralSettings';
-import { UsersSettings } from './sections/UsersSettings';
-import { RolesSettings } from './sections/RolesSettings';
+import {UsersSettings} from "@/pages/settings/sections/UsersSettings.tsx";
 
 type SettingsTab = 'general' | 'company' | 'smtp' | 'backup' | 'users' | 'roles';
 
@@ -54,7 +53,7 @@ export const SettingsPage: React.FC = () => {
               <UsersSettings />
             </TabsContent>
             <TabsContent value="roles">
-              <RolesSettings />
+              {/*<RolesSettings />*/}
             </TabsContent>
           </CardContent>
         </Card>
